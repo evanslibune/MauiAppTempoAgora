@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using MauiAppTempoAgora.Models;
+﻿using MauiAppTempoAgora.Models;
 using MauiAppTempoAgora.Services;
 
 namespace MauiAppTempoAgora
@@ -26,10 +25,14 @@ namespace MauiAppTempoAgora
 
                         dados_previsão = $"Latitude: {t.lat} \n" +
                                          $"Longitude: {t.lon} \n" +
+                                         $"Descrição: {t.description} \n" +
+                                         $"Clima: {t.main} \n" +
                                          $"Nascer do Sol: {t.sunrise} \n" +
                                          $"Por do Sol: {t.sunset} \n" +
                                          $"Temp Máx: {t.temp_max} \n" +
-                                         $"Temp Min: {t.temp_min} \n";
+                                         $"Temp Min: {t.temp_min} \n" +
+                                         $"Velocidade do vento: {t.speed} m/s\n" +
+                                         $"Visibilidade: {t.visibility} metros\n";
 
                         lbl_res.Text = dados_previsão;
                     }
@@ -40,12 +43,18 @@ namespace MauiAppTempoAgora
                     {
 
                     }
-                } else 
-                { 
+                }
+                else
+                {
                     lbl_res.Text = "Digite a cidade";
                 }
 
-            }catch(Exception ex)
+            }
+            catch (HttpRequestException httpEx)
+            {
+                await DisplayAlert("Sem conexão", httpEx.Message, "OK");
+            }
+            catch (Exception ex)
             {
                 await DisplayAlert("Ops", ex.Message, "OK");
             }

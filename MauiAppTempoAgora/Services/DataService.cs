@@ -18,7 +18,17 @@ namespace MauiAppTempoAgora.Services
             {
                 HttpResponseMessage resp = await client.GetAsync(url);
 
-                if (resp.IsSuccessStatusCode)
+                if (resp.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                else if (resp.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable ||
+                         resp.StatusCode == System.Net.HttpStatusCode.RequestTimeout ||
+                         resp.StatusCode == System.Net.HttpStatusCode.BadGateway)
+                {
+                    throw new HttpRequestException("Você não esta conectado com a internet.");
+                }
+                else if (resp.IsSuccessStatusCode)
                 {
                     string json = await resp.Content.ReadAsStringAsync();
 
